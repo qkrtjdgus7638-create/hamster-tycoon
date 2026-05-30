@@ -68,11 +68,6 @@ export function renderApp(root, state, handlers, lastEvent = null) {
           </div>
         </div>
 
-        <div class="upgrade-cost-panel">
-          <span>다음 강화 비용</span>
-          <strong>${formatNumber(upgradeCost)}원</strong>
-        </div>
-
         <section class="compact-log-panel">
           <div class="compact-log-heading">
             <h2>최근 로그</h2>
