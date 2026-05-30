@@ -395,31 +395,28 @@ h1 {
   transition: width 220ms ease;
 }
 
-.stat-grid {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 10px;
-}
-
-.stat-card {
-  min-height: 72px;
+.upgrade-cost-panel {
+  display: flex;
+  min-height: 68px;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
   padding: 12px;
   border: 1px solid rgba(176, 126, 62, 0.22);
   border-radius: 8px;
   background: rgba(255, 244, 215, 0.8);
 }
 
-.stat-card span {
+.upgrade-cost-panel span {
   display: block;
   color: var(--muted);
-  font-size: 0.82rem;
+  font-size: 0.92rem;
   font-weight: 700;
 }
 
-.stat-card strong {
+.upgrade-cost-panel strong {
   display: block;
-  margin-top: 5px;
-  font-size: 1.25rem;
+  font-size: 1.4rem;
 }
 
 .compact-log-panel {
@@ -769,13 +766,9 @@ h1 {
     width: min(54vw, 230px);
   }
 
-  .stat-card {
-    min-height: 62px;
+  .upgrade-cost-panel {
+    min-height: 60px;
     padding: 10px;
-  }
-
-  .stat-card strong {
-    font-size: 1.08rem;
   }
 }
 
@@ -822,16 +815,12 @@ h1 {
     width: 96px;
   }
 
-  .stat-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-
-  .stat-card {
-    min-height: 58px;
+  .upgrade-cost-panel {
+    min-height: 56px;
     padding: 8px;
   }
 
-  .stat-card strong {
+  .upgrade-cost-panel strong {
     font-size: 1.05rem;
   }
 

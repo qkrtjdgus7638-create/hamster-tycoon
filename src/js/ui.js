@@ -4,8 +4,6 @@ import {
   getNextLevelExp,
   getProgressPercent,
   getUpgradeCost,
-  getUpgradeMultiplier,
-  getUpgradeRule,
 } from "./formulas.js";
 
 const gradeOrder = new Map(FOOD_GRADES.map((grade, index) => [grade.id, index]));
@@ -14,8 +12,6 @@ export function renderApp(root, state, handlers, lastEvent = null) {
   const tier = getHamsterTier(state.hamster.level);
   const nextExp = getNextLevelExp(state.hamster.level);
   const upgradeCost = getUpgradeCost(state.hamster.upgrade, tier);
-  const upgradeRule = getUpgradeRule(state.hamster.upgrade);
-  const upgradeMultiplier = getUpgradeMultiplier(state.hamster.upgrade);
   const collectionItems = getCollectionItems(state.collection);
   const featuredClass = lastEvent?.food?.gradeId ? `is-${lastEvent.food.gradeId}` : "";
 
@@ -72,11 +68,9 @@ export function renderApp(root, state, handlers, lastEvent = null) {
           </div>
         </div>
 
-        <div class="stat-grid">
-          ${renderStat("돈 배율", `${formatMultiplier(tier.moneyMultiplier)}x`)}
-          ${renderStat("경험치 배율", `${formatMultiplier(tier.expMultiplier)}x`)}
-          ${renderStat("강화 배율", `${formatMultiplier(upgradeMultiplier)}x`)}
-          ${renderStat("다음 강화", `${formatNumber(upgradeCost)}원`)}
+        <div class="upgrade-cost-panel">
+          <span>다음 강화 비용</span>
+          <strong>${formatNumber(upgradeCost)}원</strong>
         </div>
 
         <section class="compact-log-panel">
@@ -98,7 +92,7 @@ export function renderApp(root, state, handlers, lastEvent = null) {
       </button>
       <button class="secondary-action" data-action="upgrade">
         <span>햄스터 강화</span>
-        <small>성공률 ${Math.round(upgradeRule.successRate * 100)}%</small>
+        <small>다음 강화 ${formatNumber(upgradeCost)}원</small>
       </button>
     </nav>
 
@@ -175,15 +169,6 @@ function renderLastFood(lastEvent) {
   `;
 }
 
-function renderStat(label, value) {
-  return `
-    <div class="stat-card">
-      <span>${label}</span>
-      <strong>${value}</strong>
-    </div>
-  `;
-}
-
 function renderCollection(items) {
   if (items.length === 0) {
     return '<p class="empty-copy">아직 도감이 비었습니다. 햄스터가 종이만 씹고 있습니다.</p>';
@@ -245,10 +230,6 @@ function getFoodIcon(gradeId) {
 
 function formatNumber(value) {
   return new Intl.NumberFormat("ko-KR").format(value);
-}
-
-function formatMultiplier(value) {
-  return value.toFixed(2);
 }
 
 function escapeHtml(value) {
