@@ -24,9 +24,17 @@ http://localhost:5173
 
 ## GitHub Pages 배포
 
-이 저장소를 GitHub에 올린 뒤 `main` 브랜치에 push하면 `.github/workflows/pages.yml`이 자동으로 GitHub Pages에 배포합니다.
+이 저장소를 GitHub에 올린 뒤 GitHub 저장소의 `Settings > Pages`에서 아래처럼 설정합니다.
 
-처음 한 번은 GitHub 저장소의 `Settings > Pages`에서 Source가 `GitHub Actions`로 되어 있는지 확인합니다.
+- Source: `Deploy from a branch`
+- Branch: `main`
+- Folder: `/ (root)`
+
+저장하면 잠시 뒤 아래 형식의 주소로 공개됩니다.
+
+```text
+https://계정명.github.io/저장소명/
+```
 
 ## 구현 범위
 
