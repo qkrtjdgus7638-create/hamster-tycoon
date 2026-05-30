@@ -25,9 +25,16 @@ export function renderApp(root, state, handlers, lastEvent = null) {
         <p class="eyebrow">무료 MVP</p>
         <h1>햄찌 코인 공장</h1>
       </div>
-      <div class="money-pill">
-        <span>보유 돈</span>
-        <strong>${formatNumber(state.money)}원</strong>
+      <div class="topbar-actions">
+        <div class="money-pill">
+          <span>보유 돈</span>
+          <strong>${formatNumber(state.money)}원</strong>
+        </div>
+        <button class="menu-button" data-action="toggle-menu" aria-label="메뉴 열기" aria-expanded="false" aria-controls="game-menu">
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
       </div>
     </header>
 
@@ -72,24 +79,37 @@ export function renderApp(root, state, handlers, lastEvent = null) {
           ${renderStat("다음 강화", `${formatNumber(upgradeCost)}원`)}
         </div>
       </section>
+    </main>
 
-      <section class="action-panel">
-        <button class="primary-action" data-action="draw">
-          <span>먹이 뽑기</span>
-          <small>뽑자마자 자동 먹방</small>
-        </button>
-        <button class="secondary-action" data-action="upgrade">
-          <span>햄스터 강화</span>
-          <small>성공률 ${Math.round(upgradeRule.successRate * 100)}%</small>
-        </button>
-        <button class="secondary-action" data-action="toggle-dex">
-          <span>도감 보기</span>
-          <small>${collectionItems.length}종 발견</small>
-        </button>
-        <button class="ghost-action" data-action="reset">
-          <span>저장 초기화</span>
-          <small>처음부터 다시</small>
-        </button>
+    <nav class="bottom-actions" aria-label="주요 행동">
+      <button class="primary-action" data-action="draw">
+        <span>먹이 뽑기</span>
+        <small>뽑자마자 자동 먹방</small>
+      </button>
+      <button class="secondary-action" data-action="upgrade">
+        <span>햄스터 강화</span>
+        <small>성공률 ${Math.round(upgradeRule.successRate * 100)}%</small>
+      </button>
+    </nav>
+
+    <div class="menu-scrim" data-action="close-menu" hidden></div>
+    <aside class="game-menu" id="game-menu" hidden>
+      <div class="menu-heading">
+        <div>
+          <p class="eyebrow">햄찌 서랍</p>
+          <h2>메뉴</h2>
+        </div>
+        <button class="menu-close" data-action="close-menu">닫기</button>
+      </div>
+
+      <section class="info-panel">
+        <div class="panel-heading">
+          <h2>먹이 도감</h2>
+          <span>${collectionItems.length}/${FOOD_GRADES.reduce((sum, grade) => sum + grade.foods.length, 0)}종</span>
+        </div>
+        <div class="collection-grid">
+          ${renderCollection(collectionItems)}
+        </div>
       </section>
 
       <section class="info-panel">
@@ -102,26 +122,21 @@ export function renderApp(root, state, handlers, lastEvent = null) {
         </ol>
       </section>
 
-      <section class="info-panel collection-panel" id="collection-panel" hidden>
-        <div class="panel-heading">
-          <h2>먹이 도감</h2>
-          <span>${collectionItems.length}/${FOOD_GRADES.reduce((sum, grade) => sum + grade.foods.length, 0)}종</span>
-        </div>
-        <div class="collection-grid">
-          ${renderCollection(collectionItems)}
-        </div>
-      </section>
-
       <section class="info-panel">
         <div class="panel-heading">
           <h2>희귀 기록</h2>
-          <span>랭킹 확장용 데이터 포함</span>
+          <span>랭킹 확장용 데이터</span>
         </div>
         <div class="history-list">
           ${renderRareHistory(state.rareHistory)}
         </div>
       </section>
-    </main>
+
+      <button class="reset-menu-action" data-action="reset">
+        <span>저장 초기화</span>
+        <small>처음부터 다시. 햄스터는 모르는 척합니다.</small>
+      </button>
+    </aside>
   `;
 
   root.querySelector("[data-action='draw']").addEventListener("click", handlers.onDraw);
@@ -130,12 +145,21 @@ export function renderApp(root, state, handlers, lastEvent = null) {
     .addEventListener("click", handlers.onUpgrade);
   root.querySelector("[data-action='reset']").addEventListener("click", handlers.onReset);
   root
-    .querySelector("[data-action='toggle-dex']")
-    .addEventListener("click", () => {
-      const panel = root.querySelector("#collection-panel");
-      panel.hidden = !panel.hidden;
-      if (!panel.hidden) panel.scrollIntoView({ behavior: "smooth", block: "nearest" });
-    });
+    .querySelector("[data-action='toggle-menu']")
+    .addEventListener("click", () => toggleMenu(root, true));
+  root.querySelectorAll("[data-action='close-menu']").forEach((element) => {
+    element.addEventListener("click", () => toggleMenu(root, false));
+  });
+}
+
+function toggleMenu(root, isOpen) {
+  const menu = root.querySelector("#game-menu");
+  const scrim = root.querySelector(".menu-scrim");
+  const button = root.querySelector("[data-action='toggle-menu']");
+
+  menu.hidden = !isOpen;
+  scrim.hidden = !isOpen;
+  button.setAttribute("aria-expanded", String(isOpen));
 }
 
 function renderLastFood(lastEvent) {
