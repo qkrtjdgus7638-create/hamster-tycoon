@@ -22,6 +22,7 @@
     "Segoe UI",
     sans-serif;
   color: var(--ink);
+  touch-action: manipulation;
 }
 
 * {
@@ -43,6 +44,9 @@ body {
 
 button {
   font: inherit;
+  touch-action: manipulation;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
 }
 
 .app-shell {
@@ -418,6 +422,54 @@ h1 {
   font-size: 1.25rem;
 }
 
+.compact-log-panel {
+  margin-top: 12px;
+  padding: 10px;
+  border: 1px solid rgba(176, 126, 62, 0.22);
+  border-radius: 8px;
+  background: rgba(255, 248, 232, 0.76);
+}
+
+.compact-log-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+
+.compact-log-heading h2 {
+  margin-bottom: 0;
+  font-size: 0.98rem;
+}
+
+.compact-log-heading span {
+  color: var(--muted);
+  font-size: 0.78rem;
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+.compact-log-list {
+  display: grid;
+  max-height: 104px;
+  gap: 6px;
+  margin: 0;
+  padding: 0;
+  overflow: auto;
+  overscroll-behavior: contain;
+  list-style: none;
+}
+
+.compact-log-list li {
+  padding: 8px 9px;
+  border-radius: 8px;
+  background: rgba(255, 244, 221, 0.86);
+  color: #4b382c;
+  font-size: 0.86rem;
+  line-height: 1.36;
+}
+
 .bottom-actions {
   position: fixed;
   right: max(14px, calc((100vw - 1120px) / 2 + 24px));
@@ -757,11 +809,11 @@ h1 {
   }
 
   .hamster-stage {
-    min-height: 218px;
+    min-height: 190px;
   }
 
   .hamster-face {
-    width: min(58vw, 205px);
+    width: min(52vw, 188px);
   }
 
   .food-pop {
@@ -781,6 +833,20 @@ h1 {
 
   .stat-card strong {
     font-size: 1.05rem;
+  }
+
+  .compact-log-panel {
+    margin-top: 9px;
+    padding: 9px;
+  }
+
+  .compact-log-list {
+    max-height: 86px;
+  }
+
+  .compact-log-list li {
+    padding: 7px 8px;
+    font-size: 0.8rem;
   }
 
   .bottom-actions {

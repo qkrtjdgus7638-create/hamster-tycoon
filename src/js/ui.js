@@ -78,6 +78,16 @@ export function renderApp(root, state, handlers, lastEvent = null) {
           ${renderStat("강화 배율", `${formatMultiplier(upgradeMultiplier)}x`)}
           ${renderStat("다음 강화", `${formatNumber(upgradeCost)}원`)}
         </div>
+
+        <section class="compact-log-panel">
+          <div class="compact-log-heading">
+            <h2>최근 로그</h2>
+            <span>${formatNumber(state.stats.totalDraws)}회 뽑음</span>
+          </div>
+          <ol class="compact-log-list">
+            ${state.logs.map((log) => `<li>${escapeHtml(log)}</li>`).join("")}
+          </ol>
+        </section>
       </section>
     </main>
 
@@ -110,16 +120,6 @@ export function renderApp(root, state, handlers, lastEvent = null) {
         <div class="collection-grid">
           ${renderCollection(collectionItems)}
         </div>
-      </section>
-
-      <section class="info-panel">
-        <div class="panel-heading">
-          <h2>최근 로그</h2>
-          <span>${formatNumber(state.stats.totalDraws)}회 뽑음</span>
-        </div>
-        <ol class="log-list">
-          ${state.logs.map((log) => `<li>${escapeHtml(log)}</li>`).join("")}
-        </ol>
       </section>
 
       <section class="info-panel">
