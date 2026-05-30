@@ -14,6 +14,8 @@ export function renderApp(root, state, handlers, lastEvent = null) {
   const upgradeCost = getUpgradeCost(state.hamster.upgrade, tier);
   const collectionItems = getCollectionItems(state.collection);
   const featuredClass = lastEvent?.food?.gradeId ? `is-${lastEvent.food.gradeId}` : "";
+  const skin = getHamsterSkin(state.hamster.upgrade);
+  const activity = getHamsterActivity(lastEvent);
 
   root.innerHTML = `
     <header class="topbar">
@@ -36,16 +38,51 @@ export function renderApp(root, state, handlers, lastEvent = null) {
 
     <main class="game-layout">
       <section class="hero-panel ${featuredClass}" aria-live="polite">
-        <div class="hamster-stage">
+        <div class="cage-scene ${activity}" aria-label="햄스터 케이지">
+          <div class="cage-back">
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+          </div>
+          <div class="cage-floor"></div>
+
+          <button class="cage-object object-wheel" type="button" aria-label="쳇바퀴">
+            <span class="wheel-ring"></span>
+            <span class="wheel-spoke spoke-a"></span>
+            <span class="wheel-spoke spoke-b"></span>
+            <span class="wheel-stand"></span>
+          </button>
+          <button class="cage-object object-bottle" type="button" aria-label="물통">
+            <span class="bottle-body"></span>
+            <span class="bottle-water"></span>
+            <span class="bottle-nozzle"></span>
+            <span class="bottle-drop"></span>
+          </button>
+          <button class="cage-object object-feeder" type="button" aria-label="먹이통">
+            <span class="feeder-bowl"></span>
+            <span class="feed feed-a"></span>
+            <span class="feed feed-b"></span>
+            <span class="feed feed-c"></span>
+          </button>
+
           <div class="hamster-shadow"></div>
-          <div class="hamster-face" aria-label="햄스터 임시 캐릭터">
-            <span class="ear left-ear"></span>
-            <span class="ear right-ear"></span>
-            <span class="eye left-eye"></span>
-            <span class="eye right-eye"></span>
-            <span class="nose"></span>
-            <span class="cheek left-cheek"></span>
-            <span class="cheek right-cheek"></span>
+          <div class="hamster-sprite ${skin.id}" aria-label="${skin.name}">
+            <span class="hamster-ear left-ear"></span>
+            <span class="hamster-ear right-ear"></span>
+            <span class="hamster-body"></span>
+            <span class="hamster-belly"></span>
+            <span class="hamster-eye left-eye"></span>
+            <span class="hamster-eye right-eye"></span>
+            <span class="hamster-nose"></span>
+            <span class="hamster-mouth"></span>
+            <span class="hamster-cheek left-cheek"></span>
+            <span class="hamster-cheek right-cheek"></span>
+            <span class="hamster-paw left-paw"></span>
+            <span class="hamster-paw right-paw"></span>
+            <span class="skin-mark skin-mark-a"></span>
+            <span class="skin-mark skin-mark-b"></span>
           </div>
           ${renderLastFood(lastEvent)}
         </div>
@@ -149,6 +186,29 @@ function toggleMenu(root, isOpen) {
   menu.hidden = !isOpen;
   scrim.hidden = !isOpen;
   button.setAttribute("aria-expanded", String(isOpen));
+}
+
+function getHamsterActivity(lastEvent) {
+  if (lastEvent?.type === "food") return "is-eating";
+  if (lastEvent?.type === "upgrade" && lastEvent.success) return "is-proud";
+  if (lastEvent?.type === "upgrade" && lastEvent.affordable === false) return "is-thirsty";
+  if (lastEvent?.type === "upgrade") return "is-wheel";
+  return "is-idle";
+}
+
+function getHamsterSkin(upgrade) {
+  const skins = [
+    { minUpgrade: 0, id: "skin-basic", name: "기본 햄스터" },
+    { minUpgrade: 5, id: "skin-sprout", name: "새싹 햄스터" },
+    { minUpgrade: 10, id: "skin-cheese", name: "치즈 햄스터" },
+    { minUpgrade: 15, id: "skin-berry", name: "딸기볼 햄스터" },
+    { minUpgrade: 20, id: "skin-gold", name: "황금 햄스터" },
+    { minUpgrade: 25, id: "skin-cosmic", name: "우주 햄스터" },
+  ];
+
+  return skins.reduce((current, skin) => {
+    return upgrade >= skin.minUpgrade ? skin : current;
+  }, skins[0]);
 }
 
 function renderLastFood(lastEvent) {
